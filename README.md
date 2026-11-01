@@ -1,20 +1,17 @@
 # Sinov-Oybek
 
-Digital Group'ning sinov modeli: noldan o'qitilgan, 10 million parametrli o'zbek tilidagi kichik model.
-U Linux'da, shu kompyuterning o'zida, internetsiz ishlaydi.
+An experimental Uzbek language model by Digital Group. It has 10 million parameters, was trained from scratch, and runs locally on Linux with no internet connection.
 
-> **Bu sinov modeli, tayyor mahsulot emas.** Javoblari ko'pincha xato bo'ladi: 36 ta bilim tekshiruvidan 5 tasi,
-> 15 ta hisob tekshiruvidan 0 tasi to'g'ri chiqqan. "Kim?" savollarida o'zini tanishtirib yuboradi.
-> Javoblarni tekshirmasdan ishlatmang. Modelda kontent filtri yo'q.
+> **This is a test model, not a finished product.** It answers in Uzbek and its answers are often wrong: 5 of 36 knowledge checks and 0 of 15 math checks were correct. It also tends to introduce itself when asked "who is X?" questions. Verify its answers before using them.
 
-## Talablar
+## Requirements
 
-- Linux, Python 3.10+ va `python3-venv`
-- 4 GB RAM (tavsiya 8 GB), 2 yadroli protsessor
-- Videokarta shart emas
-- O'rnatish uchun taxminan 1.2 GB bo'sh joy va internet
+- Linux with Python 3.10+ and `python3-venv`
+- 4 GB RAM (8 GB recommended) and a dual-core CPU
+- No GPU required
+- About 1.2 GB of free disk space and internet access for installation
 
-## O'rnatish va ishga tushirish
+## Install and run
 
 ```bash
 git clone https://github.com/q0d1r0v/sinov-oybek-ai-model.git
@@ -23,19 +20,18 @@ cd sinov-oybek-ai-model
 ./run.sh
 ```
 
-Keyin brauzerda oching: <http://127.0.0.1:8000>
+Then open <http://127.0.0.1:8000> in your browser.
 
-Terminalda gaplashish: `.venv/bin/python chat.py`
+To chat in the terminal instead, run `.venv/bin/python chat.py`.
 
-## Senzura
+## Uncensored model
 
-Bu model senzurasiz: unga savollarni rad etish o'rgatilmagan va dasturda kontent filtri yo'q.
-50 savolli sinovdagi 150 ta javobning faqat 1 tasida rad belgisi topilgan.
+This model is uncensored: it was not taught to refuse questions, and the app has no content filter. Only 1 of 150 answers in the 50-question test contained a refusal marker.
 
-- Model nomaqbul, noto'g'ri yoki bir tomonlama javob berishi mumkin.
-- O'qitilgan matnlardagi qarashlar javoblarga ham o'tishi mumkin.
-- Javoblar va ulardan foydalanish uchun foydalanuvchining o'zi javob beradi. Bolalarga bermang.
+- The model can give offensive, false, or one-sided answers.
+- Views found in its training texts can appear in its answers.
+- You are responsible for how you use its answers. Do not give it to children.
 
-## Maxfiylik
+## Privacy
 
-Server faqat `127.0.0.1` da ishlaydi, boshqa kompyuterlardan ochilmaydi. Yozishmalar saqlanmaydi va hech qayerga yuborilmaydi.
+The server listens on `127.0.0.1` only, so other computers cannot reach it. Conversations are not stored or sent anywhere.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sinov-Oybek modelini yuklaydi va javob yozadi. Terminalda ishlatish: python chat.py"""
+"""Loads the Sinov-Oybek model and generates replies. Terminal chat: python chat.py"""
 from pathlib import Path
 
 import torch
@@ -40,10 +40,10 @@ class Bot:
 
 if __name__ == "__main__":
     bot = Bot()
-    print("Sinov-Oybek. Chiqish: Ctrl+C")
+    print("Sinov-Oybek. Press Ctrl+C to exit.")
     try:
         while True:
-            q = input("\nSiz: ").strip()
+            q = input("\nYou: ").strip()
             if q:
                 print("Model:", bot.ask(q))
     except (KeyboardInterrupt, EOFError):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chat sahifasi va API. Faqat shu kompyuterdan ochiladi (127.0.0.1)."""
+"""Chat page and API. Reachable from this computer only (127.0.0.1)."""
 import json
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -21,7 +21,7 @@ class Handler(BaseHTTPRequestHandler):
     server_version = "SinovOybek"
     sys_version = ""
 
-    def log_message(self, *args):  # yozishmalar logga tushmasin
+    def log_message(self, *args):  # do not write conversations to the log
         pass
 
     def _send(self, code, body, ctype="application/json; charset=utf-8"):
@@ -41,42 +41,42 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if not self._host_ok():
-            return self._json(403, {"error": "ruxsat yo‘q"})
+            return self._json(403, {"error": "forbidden"})
         if self.path == "/":
             return self._send(200, PAGE, "text/html; charset=utf-8")
-        self._json(404, {"error": "topilmadi"})
+        self._json(404, {"error": "not found"})
 
     def do_POST(self):
         if not self._host_ok():
-            return self._json(403, {"error": "ruxsat yo‘q"})
+            return self._json(403, {"error": "forbidden"})
         origin = self.headers.get("Origin")
         if origin and origin.split("//")[-1] not in ALLOWED_HOSTS:
-            return self._json(403, {"error": "ruxsat yo‘q"})
+            return self._json(403, {"error": "forbidden"})
         if self.path != "/api/chat":
-            return self._json(404, {"error": "topilmadi"})
+            return self._json(404, {"error": "not found"})
         if (self.headers.get("Content-Type") or "").split(";")[0].strip() != "application/json":
-            return self._json(415, {"error": "JSON kerak"})
+            return self._json(415, {"error": "JSON required"})
         try:
             size = int(self.headers.get("Content-Length", 0))
         except ValueError:
-            return self._json(400, {"error": "noto‘g‘ri so‘rov"})
+            return self._json(400, {"error": "bad request"})
         if size <= 0 or size > MAX_BODY:
-            return self._json(413, {"error": "xabar juda uzun"})
+            return self._json(413, {"error": "message too long"})
         try:
             msg = json.loads(self.rfile.read(size)).get("message", "")
         except (ValueError, AttributeError):
-            return self._json(400, {"error": "noto‘g‘ri so‘rov"})
+            return self._json(400, {"error": "bad request"})
         if not isinstance(msg, str) or not msg.strip():
-            return self._json(400, {"error": "xabar bo‘sh"})
+            return self._json(400, {"error": "empty message"})
         if len(msg) > MAX_MESSAGE:
-            return self._json(413, {"error": "xabar juda uzun"})
+            return self._json(413, {"error": "message too long"})
         with lock:
             reply = bot.ask(msg.strip())
         self._json(200, {"reply": reply})
 
 
 if __name__ == "__main__":
-    print(f"Sinov-Oybek tayyor: http://{HOST}:{PORT}  (to‘xtatish: Ctrl+C)", flush=True)
+    print(f"Sinov-Oybek is ready: http://{HOST}:{PORT}  (press Ctrl+C to stop)", flush=True)
     try:
         ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
     except KeyboardInterrupt:

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uz">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,12 +26,12 @@
 <body>
 <header>
   <h1>Sinov-Oybek</h1>
-  <p>Sinov modeli. Javoblar ko‘pincha xato bo‘ladi, ularni tekshirmasdan ishlatmang. Hammasi shu kompyuterda ishlaydi.</p>
+  <p>Experimental model. It speaks Uzbek and its answers are often wrong, so verify them before use. Everything runs on this computer.</p>
 </header>
 <main id="log" aria-live="polite"></main>
 <form id="f">
-  <textarea id="t" rows="2" maxlength="2000" placeholder="Xabar yozing..." aria-label="Xabar" autofocus></textarea>
-  <button id="b">Yuborish</button>
+  <textarea id="t" rows="2" maxlength="2000" placeholder="Write in Uzbek..." aria-label="Message" autofocus></textarea>
+  <button id="b">Send</button>
 </form>
 <script>
   const log = document.getElementById('log'), t = document.getElementById('t'), b = document.getElementById('b');
@@ -48,15 +48,15 @@
     if (!message || b.disabled) return;
     t.value = ''; b.disabled = true;
     add(message, 'me');
-    const wait = add('Yozyapti...', 'bot');
+    const wait = add('Thinking...', 'bot');
     try {
       const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }) });
       const data = await r.json();
-      if (!r.ok) throw new Error(data.error || 'Xatolik');
-      wait.textContent = data.reply || '(javob bo‘sh)';
+      if (!r.ok) throw new Error(data.error || 'Error');
+      wait.textContent = data.reply || '(empty reply)';
     } catch (e) {
       wait.remove();
-      add(e.message || 'Server bilan aloqa yo‘q', 'err');
+      add(e.message || 'Cannot reach the server', 'err');
     }
     b.disabled = false; t.focus();
   }

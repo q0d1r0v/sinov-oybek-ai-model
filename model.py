@@ -1,4 +1,4 @@
-"""Kichik GPT: o'zbek tili uchun noldan yozilgan model (~10 mln parametr)."""
+"""Small GPT written from scratch for the Uzbek language (about 10M parameters)."""
 from dataclasses import dataclass
 import math
 import torch
@@ -8,16 +8,16 @@ import torch.nn.functional as F
 
 @dataclass
 class Config:
-    vocab_size: int = 8000   # tokenizer lug'ati
-    block_size: int = 256    # model bir vaqtda ko'radigan token soni
-    n_layer: int = 6         # bloklar soni
-    n_head: int = 8          # diqqat boshlari
-    n_embd: int = 320        # har bir token vektori o'lchami
+    vocab_size: int = 8000   # tokenizer vocabulary size
+    block_size: int = 256    # tokens the model sees at once
+    n_layer: int = 6         # transformer blocks
+    n_head: int = 8          # attention heads
+    n_embd: int = 320        # embedding size per token
     dropout: float = 0.1
 
 
 class Attention(nn.Module):
-    """Har bir token oldingi tokenlarga qaraydi (keyingilarini ko'rmaydi)."""
+    """Each token attends to earlier tokens only (causal self-attention)."""
 
     def __init__(self, c: Config):
         super().__init__()
@@ -65,7 +65,7 @@ class GPT(nn.Module):
         self.blocks = nn.ModuleList(Block(c) for _ in range(c.n_layer))
         self.ln = nn.LayerNorm(c.n_embd)
         self.head = nn.Linear(c.n_embd, c.vocab_size, bias=False)
-        self.head.weight = self.tok.weight  # kirish va chiqish vaznlari umumiy
+        self.head.weight = self.tok.weight  # input and output weights are tied
         self.apply(self._init)
         for n, p in self.named_parameters():
             if n.endswith(("proj.weight", "mlp.2.weight")):
@@ -83,7 +83,7 @@ class GPT(nn.Module):
 
     def forward(self, idx, targets=None):
         T = idx.size(1)
-        assert T <= self.config.block_size, "matn block_size dan uzun"
+        assert T <= self.config.block_size, "input is longer than block_size"
         x = self.drop(self.tok(idx) + self.pos(torch.arange(T, device=idx.device)))
         for b in self.blocks:
             x = b(x)
