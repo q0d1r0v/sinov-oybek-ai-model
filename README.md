@@ -6,6 +6,8 @@ An experimental Uzbek language model by Digital Group. It has 10 million paramet
 
 ## Requirements
 
+**Linux only for now.** Windows and macOS are not supported yet.
+
 - Linux with Python 3.10+ and `python3-venv`
 - 4 GB RAM (8 GB recommended) and a dual-core CPU
 - No GPU required
