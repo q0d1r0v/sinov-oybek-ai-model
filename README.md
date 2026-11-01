@@ -26,6 +26,37 @@ Then open <http://127.0.0.1:8000> in your browser.
 
 To chat in the terminal instead, run `.venv/bin/python chat.py`.
 
+## Example prompts
+
+The model works best with one clear task, written as a full sentence in correct Uzbek. This reduces nonsense answers, but it does not make the answers accurate.
+
+**Most reliable:**
+
+- `Sen kimsan?`
+- `Isming nima?`
+- `Seni kim yaratgan?`
+- `Fransiya poytaxti qaysi shahar?` (correct in 5 of 5 tries)
+
+**Stays on topic, but the content is weak and often repetitive:**
+
+- `Stressni kamaytirish uchun 3 ta maslahat bering.`
+- `Muntazam jismoniy mashqlarning foydalarini sanab bering.`
+- `Kitob o‘qishning afzalliklarini sanab o‘ting.`
+- `Tabiat haqida qisqa she’r yozing.`
+- `Mushuk haqida qisqa hikoya yozing.`
+- `Global isish nima?`
+
+**Avoid:**
+
+| Prompt type | What happens |
+| --- | --- |
+| A single word, such as `toshkent` | It introduces itself or makes something up |
+| Spelling mistakes | It does not understand them |
+| Facts, such as most capitals, planets, or inventors | Often wrong: it named Paris as the capital of Spain |
+| Math | 0 of 15 correct in testing |
+| "Who is X?" questions | It usually introduces itself |
+| Follow-up questions | It does not remember earlier messages |
+
 ## Uncensored model
 
 This model is uncensored: it was not taught to refuse questions, and the app has no content filter. Only 1 of 150 answers in the 50-question test contained a refusal marker.
